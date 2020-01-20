@@ -10,15 +10,24 @@ opts= setvaropts(opts,'time','InputFormat','HH:mm');
 %read data as table
 dataTable = readtable('InputData.csv',opts);
 dataTable = dataTable(1:size(dataTable)-1,:);
+% table for data from 2009
+tb09 = dataTable(1:end,:); % whole two year
 %create groups and add to table data
-loadWithGroups=dataFuzzification(dataTable,10);
+loadWithGroups=dataFuzzification(tb09,10);
 %add the returned groups to tabledata
-dataTable=addvars(dataTable,loadWithGroups(:,2),'After','load');
-%phase 1 - data processing:
+tb09=addvars(tb09,loadWithGroups(:,2),'After','load');
+% phase 1 - data processing:
 % t refers to the current state of time for time series of load, temprature
 % and indices of FTS sets
 % The following method recive the dataset as table, the current time t and
 % the size of the images that we create (NxN) and its output will be 3
 % matrices.(one for each RGB channel).
-[loadCH,tempratureCH,fuzzySetsCH]=generateMatrices(dataTable,size(dataTable,1),32);
-x=tempratureCH(:,:,8728);
+[loadCH,tempratureCH,fuzzySetsCH]=generateMatrices(tb09,size(tb09,1),32);
+% phase 2 - creating image time series
+% we create 4D array from the dataset
+% each 3D layer will contain matrices size NxNx3
+% each one of the channels in the 3rd dimantion 
+% consist of load, fuzzy sets and tempratureCH
+dataset4D=CompileDataSet(fuzzySetsCH, loadCH, tempratureCH, size(tempratureCH,3));
+save STLFDataSet.mat dataTable dataset4D tb09
+disp("file Save in: "+ pwd + "\STLFDataSet.mat");

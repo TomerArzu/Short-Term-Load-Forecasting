@@ -30,4 +30,6 @@ for j=1:3
         i=i+1;
     end %while
 end %for
+disp("generateMatrices Done !");
+
 end %function

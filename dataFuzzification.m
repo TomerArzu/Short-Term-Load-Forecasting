@@ -27,7 +27,6 @@ for i=1:size(dataset,1)
             break;
         end
     end
-    disp(i);
 end
-
+disp("dataFuzzification Done !");
 end
